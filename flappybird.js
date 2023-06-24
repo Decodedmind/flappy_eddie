@@ -1,4 +1,3 @@
-
 //board
 let board;
 let boardWidth = 360;
@@ -62,7 +61,11 @@ window.onload = function() {
 
     requestAnimationFrame(update);
     setInterval(placePipes, 1500); //every 1.5 seconds
-    document.addEventListener("keydown", moveBird);
+    if (isMobileDevice()) {
+        document.addEventListener("touchstart", moveBird);
+    } else {
+        document.addEventListener("keydown", moveBird);
+    }
 }
 
 function update() {
@@ -146,16 +149,30 @@ function placePipes() {
 }
 
 function moveBird(e) {
-    if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
-        //jump
+    if (isMobileDevice()) {
+        // Tap on screen (for mobile)
         velocityY = -6;
 
-        //reset game
+        // Reset game
         if (gameOver) {
             bird.y = birdY;
             pipeArray = [];
             score = 0;
             gameOver = false;
+        }
+    } else {
+        // Keyboard input (for computer)
+        if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
+            // Jump
+            velocityY = -6;
+
+            // Reset game
+            if (gameOver) {
+                bird.y = birdY;
+                pipeArray = [];
+                score = 0;
+                gameOver = false;
+            }
         }
     }
 }
@@ -165,4 +182,11 @@ function detectCollision(a, b) {
            a.x + a.width > b.x &&   //a's top right corner passes b's top left corner
            a.y < b.y + b.height &&  //a's top left corner doesn't reach b's bottom left corner
            a.y + a.height > b.y;    //a's bottom left corner passes b's top left corner
+}
+
+function isMobileDevice() {
+    return (
+        typeof window.orientation !== "undefined" ||
+        navigator.userAgent.indexOf("IEMobile") !== -1
+    );
 }
