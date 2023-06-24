@@ -46,12 +46,21 @@ window.onload = function() {
     // context.fillStyle = "green";
     // context.fillRect(bird.x, bird.y, bird.width, bird.height);
 
-    //load images
+   
+
     birdImg = new Image();
-    birdImg.src = "./eddie.jpg";
-    birdImg.onload = function() {
-        context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
-    }
+birdImg.src = "./eddie.jpg";
+birdImg.onload = function() {
+    context.save(); // Save the current context state
+    context.beginPath();
+    context.arc(bird.x + bird.width / 2, bird.y + bird.height / 2, bird.width / 2, 0, 2 * Math.PI); // Create a circular path
+    context.closePath();
+    context.clip(); // Apply the circular clip to the context
+
+    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+
+    context.restore(); // Restore the previous context state
+}
 
     topPipeImg = new Image();
     topPipeImg.src = "./toppipe.png";
